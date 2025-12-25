@@ -58,16 +58,16 @@ export default function HomeClient() {
         <div className="pb-12">
             {/* Banner Section */}
             <section className="py-6 sm:py-10">
-                <div className="relative w-full aspect-[2/1] sm:aspect-[3/1] rounded-xl overflow-hidden bg-stone-100 mb-8">
+                <div className="relative w-full aspect-[2/1] sm:aspect-[3/1] rounded-xl overflow-hidden bg-background-cream mb-8">
                     <Image
-                        src="https://placehold.co/1200x400/e7e5e4/44403c?text=New+Collection+Arrivals"
+                        src="/Assets/Images/main-banner.png"
                         alt="Banner"
                         fill
                         className="object-cover"
                         priority
                     />
                     <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
-                        <h2 className="text-3xl md:text-5xl font-serif text-white drop-shadow-md">Timeless Elegance</h2>
+                        {/* <h2 className="text-3xl md:text-5xl font-serif text-white drop-shadow-md">Timeless Elegance</h2> */}
                     </div>
                 </div>
             </section>
@@ -92,11 +92,10 @@ export default function HomeClient() {
                     ))}
                 </div>
             ) : (
-                <div className="text-center py-20 text-stone-500">
+                <div className="text-center py-20 text-text-muted">
                     <p>No products found matching your filters.</p>
                     <button
-                        onClick={() => { setSelectedCategory('All'); setSelectedPriceRange('All'); }}
-                        className="text-stone-800 underline mt-2 hover:text-stone-600"
+                        className="text-text-primary underline mt-2 hover:text-primary-gold"
                     >
                         Clear filters
                     </button>
