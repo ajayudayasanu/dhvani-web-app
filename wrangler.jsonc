@@ -1,0 +1,8 @@
+{
+    "name": "dhvani-web",
+    "compatibility_date": "2024-09-23",
+    "assets": {
+        "binding": "ASSETS",
+        "directory": "./out"
+    }
+}
