@@ -22,7 +22,7 @@ export default function FilterBar({
     onSortChange,
 }: FilterBarProps) {
     return (
-        <div className="flex flex-col gap-4 py-6 border-b border-ui-border mb-8 sm:flex-row sm:items-center sm:justify-between sticky top-[73px] bg-background-main z-40 px-1 shadow-sm sm:shadow-none sm:static">
+        <div className="flex flex-col gap-4 py-1 border-b border-ui-border mb-2 sm:flex-row sm:items-center sm:justify-between bg-background-main px-1">
 
             {/* Filters */}
             <div className="flex flex-wrap gap-2 items-center">

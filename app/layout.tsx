@@ -24,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} font-sans min-h-screen flex flex-col text-stone-900 bg-white`}>
+      <body className={`${inter.variable} ${playfair.variable} min-h-screen flex flex-col text-stone-900 bg-white`}>
         <Header />
         <main className="flex-grow w-full max-w-6xl mx-auto px-4 sm:px-6">
           {children}

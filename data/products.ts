@@ -9,16 +9,15 @@ export interface Product {
   images: string[];
   isFeatured?: boolean;
   instagramPostUrl?: string;
-  variants?: {
-    name: string;
-    inStock: boolean;
-  }[];
+  variants?: string[]; // Array of Product IDs that are variants of this product
+  variantName?: string; // Name of this specific variant (e.g. "Green Beads")
 }
 
 export const products: Product[] = [
+  // Product 1 Variants
   {
-    id: "1",
-    slug: "elegant-antique-hasli-necklace-nc2029",
+    id: "1-green",
+    slug: "elegant-antique-hasli-necklace-nc2029-green",
     name: "Elegant Antique Hasli Necklace Sets NC2029",
     price: 2400,
     shortDescription: "Beautiful AD Moissanite Peacock Necklace with matching earrings.",
@@ -26,18 +25,59 @@ export const products: Product[] = [
     category: "Necklace",
     images: [
       "https://kruthikajewellery.com/cdn/shop/files/IMG_0146_copy_b0dd9dcf-9877-4ff3-be26-c95ec68af963.jpg",
-      "https://kruthikajewellery.com/cdn/shop/files/IMG_0235_copy.jpg",
+      "https://kruthikajewellery.com/cdn/shop/files/IMG_0235_copy.jpg"
+    ],
+    isFeatured: true,
+    variantName: "Green Beads",
+    variants: ["1-ruby", "1-pastel", "1-purple"]
+  },
+  {
+    id: "1-ruby",
+    slug: "elegant-antique-hasli-necklace-nc2029-ruby",
+    name: "Elegant Antique Hasli Necklace Sets NC2029",
+    price: 2500,
+    shortDescription: "Beautiful AD Moissanite Peacock Necklace with matching earrings.",
+    description: "Enhance your style with our Beautiful AD Moissanite Peacock Necklace Sets paired perfectly with matching earrings. Crafted with high-quality stones & beads, this set combines timeless elegance with a modern touch. Ideal for special occasions or adding a touch of glamour to your look. Comes with complementary Dori, brass alloy base, intricate craftsmanship, and semi-precious stones.",
+    category: "Necklace",
+    images: [
       "https://kruthikajewellery.com/cdn/shop/files/IMG_0234_copy.jpg",
       "https://kruthikajewellery.com/cdn/shop/files/IMG_0236_copy.jpg"
     ],
-    isFeatured: true,
-    variants: [
-      { name: "Green Beads", inStock: true },
-      { name: "Ruby Beads", inStock: true },
-      { name: "Pastel Green Beads", inStock: true },
-      { name: "Purple Beads", inStock: false }
-    ]
+    isFeatured: false,
+    variantName: "Ruby Beads",
+    variants: ["1-green", "1-pastel", "1-purple"]
   },
+  {
+    id: "1-pastel",
+    slug: "elegant-antique-hasli-necklace-nc2029-pastel",
+    name: "Elegant Antique Hasli Necklace Sets NC2029",
+    price: 2450,
+    shortDescription: "Beautiful AD Moissanite Peacock Necklace with matching earrings.",
+    description: "Enhance your style with our Beautiful AD Moissanite Peacock Necklace Sets paired perfectly with matching earrings. Crafted with high-quality stones & beads, this set combines timeless elegance with a modern touch. Ideal for special occasions or adding a touch of glamour to your look. Comes with complementary Dori, brass alloy base, intricate craftsmanship, and semi-precious stones.",
+    category: "Necklace",
+    images: [
+      "https://kruthikajewellery.com/cdn/shop/files/IMG_0235_copy.jpg"
+    ],
+    isFeatured: false,
+    variantName: "Pastel Green Beads",
+    variants: ["1-green", "1-ruby", "1-purple"]
+  },
+  {
+    id: "1-purple",
+    slug: "elegant-antique-hasli-necklace-nc2029-purple",
+    name: "Elegant Antique Hasli Necklace Sets NC2029",
+    price: 2400,
+    shortDescription: "Beautiful AD Moissanite Peacock Necklace with matching earrings.",
+    description: "Enhance your style with our Beautiful AD Moissanite Peacock Necklace Sets paired perfectly with matching earrings. Crafted with high-quality stones & beads, this set combines timeless elegance with a modern touch. Ideal for special occasions or adding a touch of glamour to your look. Comes with complementary Dori, brass alloy base, intricate craftsmanship, and semi-precious stones.",
+    category: "Necklace",
+    images: [
+      "https://placehold.co/600x600/e2e8f0/475569?text=Out+of+Stock"
+    ],
+    isFeatured: false,
+    variantName: "Purple Beads",
+    variants: ["1-green", "1-ruby", "1-pastel"]
+  },
+
   {
     id: "2",
     slug: "simple-jadau-pendant-set-ps238",
@@ -75,10 +115,22 @@ export const products: Product[] = [
     images: [
       "https://kruthikajewellery.com/cdn/shop/files/IMG_0699_copy.jpg"
     ],
-    variants: [
-      { name: "Green", inStock: true },
-      { name: "Pink", inStock: true }
-    ]
+    variants: ["4-pink"],
+    variantName: "Green"
+  },
+  {
+    id: "4-pink",
+    slug: "trendy-jadau-floral-necklace-nc2387-pink",
+    name: "Trendy Jadau Floral Necklace NC2387",
+    price: 2460,
+    shortDescription: "Modern jadau necklace with floral motifs in multiple colors.",
+    description: "Contemporary jadau necklace featuring elegant floral patterns and premium stone setting. Available in multiple color options to match your outfit. Perfect blend of traditional and modern design.",
+    category: "Necklace",
+    images: [
+      "https://kruthikajewellery.com/cdn/shop/files/IMG_0699_copy.jpg"
+    ],
+    variants: ["4"],
+    variantName: "Pink"
   },
   {
     id: "5",
@@ -129,10 +181,22 @@ export const products: Product[] = [
     images: [
       "https://kruthikajewellery.com/cdn/shop/files/IMG_0150_copy_3ce5a147-47f7-4997-94ed-d3e8aa431e2a.jpg"
     ],
-    variants: [
-      { name: "Gold", inStock: true },
-      { name: "Antique", inStock: true }
-    ]
+    variants: ["8-antique"],
+    variantName: "Gold"
+  },
+  {
+    id: "8-antique",
+    slug: "premium-lakshmi-jadau-necklace-nc1945-antique",
+    name: "Premium Lakshmi Jadau Necklace NC1945",
+    price: 3090,
+    shortDescription: "Traditional Lakshmi design jadau necklace.",
+    description: "Elegant necklace featuring traditional Goddess Lakshmi motifs with premium jadau work. Perfect for religious ceremonies and festive occasions. Available in multiple colors to suit your preference.",
+    category: "Necklace",
+    images: [
+      "https://kruthikajewellery.com/cdn/shop/files/IMG_0150_copy_3ce5a147-47f7-4997-94ed-d3e8aa431e2a.jpg"
+    ],
+    variants: ["8"],
+    variantName: "Antique"
   },
   {
     id: "9",
@@ -159,9 +223,26 @@ export const products: Product[] = [
     ],
     isFeatured: true
   },
+
+  // Product 11 Variants
   {
-    id: "11",
-    slug: "simple-american-diamond-necklace-nc1991",
+    id: "11-silver",
+    slug: "simple-american-diamond-necklace-nc1991-silver",
+    name: "Simple American Diamond Drop Pendants Necklace Set NC1991",
+    price: 890,
+    shortDescription: "Elegant AD drop pendant necklace in multiple colors.",
+    description: "Simple yet elegant American Diamond necklace set with drop pendants and matching earrings. Available in three beautiful colors. Perfect for daily wear or office occasions. Lightweight and comfortable.",
+    category: "Necklace",
+    images: [
+      "https://kruthikajewellery.com/cdn/shop/files/IMG_0157copy_efe52781-46a4-4035-b84f-2dd840921a09.jpg",
+      "https://kruthikajewellery.com/cdn/shop/files/IMG_0157copy_efe52781-46a4-4035-b84f-2dd840921a09.jpg"
+    ],
+    variantName: "Silver",
+    variants: ["11-rose-gold", "11-gold"]
+  },
+  {
+    id: "11-rose-gold",
+    slug: "simple-american-diamond-necklace-nc1991-rose-gold",
     name: "Simple American Diamond Drop Pendants Necklace Set NC1991",
     price: 890,
     shortDescription: "Elegant AD drop pendant necklace in multiple colors.",
@@ -170,12 +251,24 @@ export const products: Product[] = [
     images: [
       "https://kruthikajewellery.com/cdn/shop/files/IMG_0157copy_efe52781-46a4-4035-b84f-2dd840921a09.jpg"
     ],
-    variants: [
-      { name: "Silver", inStock: true },
-      { name: "Rose Gold", inStock: true },
-      { name: "Gold", inStock: true }
-    ]
+    variantName: "Rose Gold",
+    variants: ["11-silver", "11-gold"]
   },
+  {
+    id: "11-gold",
+    slug: "simple-american-diamond-necklace-nc1991-gold",
+    name: "Simple American Diamond Drop Pendants Necklace Set NC1991",
+    price: 890,
+    shortDescription: "Elegant AD drop pendant necklace in multiple colors.",
+    description: "Simple yet elegant American Diamond necklace set with drop pendants and matching earrings. Available in three beautiful colors. Perfect for daily wear or office occasions. Lightweight and comfortable.",
+    category: "Necklace",
+    images: [
+      "https://kruthikajewellery.com/cdn/shop/files/IMG_0157copy_efe52781-46a4-4035-b84f-2dd840921a09.jpg"
+    ],
+    variantName: "Gold",
+    variants: ["11-silver", "11-rose-gold"]
+  },
+
   {
     id: "12",
     slug: "two-lines-pearls-beads-maala-lh402",

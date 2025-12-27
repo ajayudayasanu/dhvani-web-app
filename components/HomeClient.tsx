@@ -3,8 +3,10 @@
 import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { products } from '../data/products';
+
 import FilterBar from './FilterBar';
 import ProductCard from './ProductCard';
+import CategoryGrid from './CategoryGrid';
 
 export default function HomeClient() {
     const [selectedCategory, setSelectedCategory] = useState('All');
@@ -57,8 +59,8 @@ export default function HomeClient() {
     return (
         <div className="pb-12">
             {/* Banner Section */}
-            <section className="py-6 sm:py-10">
-                <div className="relative w-full aspect-[2/1] sm:aspect-[3/1] rounded-xl overflow-hidden bg-background-cream mb-8">
+            <section className="py-2 sm:py-2">
+                <div className="relative w-full aspect-[2/1] sm:aspect-[3/1] rounded-xl overflow-hidden bg-background-cream mb-2">
                     <Image
                         src="/Assets/Images/main-banner.png"
                         alt="Banner"
@@ -67,10 +69,13 @@ export default function HomeClient() {
                         priority
                     />
                     <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
-                        {/* <h2 className="text-3xl md:text-5xl font-serif text-white drop-shadow-md">Timeless Elegance</h2> */}
+                        <h2 className="text-3xl md:text-5xl font-playfair text-white drop-shadow-md">Timeless Elegance</h2>
                     </div>
                 </div>
             </section>
+
+            {/* Category Grid */}
+            <CategoryGrid />
 
             {/* Filters */}
             <FilterBar

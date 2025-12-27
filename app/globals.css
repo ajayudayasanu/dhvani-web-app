@@ -32,11 +32,16 @@
   --color-button-primaryHover: #B8941F;
   --color-button-secondary: #FFFFFF;
   --color-button-secondaryBorder: #D4AF37;
+
+  /* Fonts */
+  --font-sans: var(--font-playfair);
+  --font-playfair: var(--font-playfair);
 }
 
 @layer base {
   body {
     @apply bg-background-main text-text-primary;
+    font-family: var(--font-playfair);
     min-height: 100vh;
   }
 }
