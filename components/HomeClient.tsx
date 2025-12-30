@@ -47,10 +47,13 @@ export default function HomeClient() {
         } else if (sortOption === 'price_desc') {
             result.sort((a, b) => b.price - a.price);
         } else {
-            // Newest (using ID as proxy since we don't have dates, higher ID = newer)
-            // Assuming ID is numeric-ish string or ordered.
-            // If IDs are just '1', '2'... we can sort by ID desc.
-            result.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+            // Newest (using ID or createdAt if available)
+            // Since we added createdAt to our data, let's try to use it
+            result.sort((a, b) => {
+                const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                return dateB - dateA;
+            });
         }
 
         return result;

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Product, products } from '../data/products';
+import { Product, ProductVariant } from '../data/products';
 import InstagramButton from './InstagramButton';
 
 interface ProductDetailProps {
@@ -13,62 +13,52 @@ interface ProductDetailProps {
 export default function ProductDetail({ product }: ProductDetailProps) {
     const router = useRouter();
 
-    // For ID-based variants, we don't need local state for "selectedVariant" objects
-    // because clicking a variant navigates to a new URL/product.
-    // However, we need to resolve the linked variant IDs to actual product data to display buttons.
+    // State for selected variant (if product has variants)
+    const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
+        product.hasVariants && product.variants && product.variants.length > 0
+            ? product.variants[0]
+            : null
+    );
 
-    const variantProducts = product.variants?.map(id =>
-        products.find(p => p.id === id)
-    ).filter(Boolean) as Product[] || [];
-
-    // Combine current product (as a "variant" option) with linked variants if needed, 
-    // or just display linked variants. 
-    // Usually, we want to show ALL options including the current one.
-    // The verification plan says "Refactor... to be standalone entries".
-    // So if I am on "Green", "Ruby" is a variant.
-    // The list of buttons should probably be [Green (Active), Ruby, Pastel].
-
-    // We can construct a full list of related products for the selector.
-    // If the data structure links siblings (e.g. Green links to Ruby, Ruby links to Green),
-    // we can just use the `variants` array. 
-    // BUT we also need to include the CURRENT product in that list so it appears as a button.
-
-    // Let's create a display list: Current Product + Referenced Variants.
-    // Sort them by ID or some other metric if consistent ordering is needed.
-    const allVariants = [product, ...variantProducts].sort((a, b) => a.id.localeCompare(b.id));
+    // Determine current display data (Variant or Base Product)
+    const currentName = selectedVariant ? `${product.name} - ${selectedVariant.name}` : product.name;
+    const currentPrice = selectedVariant ? selectedVariant.price : product.price;
+    const currentImages = selectedVariant ? selectedVariant.images : product.images;
+    const currentStock = selectedVariant ? selectedVariant.inStock : product.inStock;
+    const currentVariantName = selectedVariant ? selectedVariant.name : undefined;
 
     // Fallback for missing images
-    const images = product.images.length > 0
-        ? product.images
-        : ['https://placehold.co/600x600/e2e8f0/475569?text=No+Image'];
+    const imagesToDisplay = currentImages.length > 0
+        ? currentImages
+        : [{ url: 'https://placehold.co/600x600/e2e8f0/475569?text=No+Image', alt: 'No Image' }];
 
-    const [activeImage, setActiveImage] = useState(images[0]);
+    const [activeImage, setActiveImage] = useState(imagesToDisplay[0]);
 
-    // Update active image when the image set changes
+    // Update active image when selected variant or product images change
     useEffect(() => {
-        setActiveImage(images[0]);
-    }, [images]);
+        setActiveImage(imagesToDisplay[0]);
+    }, [selectedVariant, product]);
 
-    const handleImageClick = (img: string) => {
+    const handleImageClick = (img: { url: string; alt: string }) => {
         setActiveImage(img);
     };
 
     const handlePrev = (e: React.MouseEvent) => {
         e.stopPropagation();
-        const currentIndex = images.indexOf(activeImage);
-        const prevIndex = (currentIndex - 1 + images.length) % images.length;
-        setActiveImage(images[prevIndex]);
+        const currentIndex = imagesToDisplay.indexOf(activeImage);
+        const prevIndex = (currentIndex - 1 + imagesToDisplay.length) % imagesToDisplay.length;
+        setActiveImage(imagesToDisplay[prevIndex]);
     };
 
     const handleNext = (e: React.MouseEvent) => {
         e.stopPropagation();
-        const currentIndex = images.indexOf(activeImage);
-        const nextIndex = (currentIndex + 1) % images.length;
-        setActiveImage(images[nextIndex]);
+        const currentIndex = imagesToDisplay.indexOf(activeImage);
+        const nextIndex = (currentIndex + 1) % imagesToDisplay.length;
+        setActiveImage(imagesToDisplay[nextIndex]);
     };
 
-    const handleVariantClick = (variantSlug: string) => {
-        router.push(`/products/${variantSlug}`);
+    const handleVariantClick = (variant: ProductVariant) => {
+        setSelectedVariant(variant);
     };
 
     return (
@@ -77,15 +67,15 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             <div className="flex flex-col gap-4">
                 <div className="relative aspect-square rounded-lg overflow-hidden bg-background-cream border border-ui-border group">
                     <Image
-                        src={activeImage}
-                        alt={product.name}
+                        src={activeImage.url}
+                        alt={activeImage.alt || currentName}
                         fill
                         className="object-cover transition-transform duration-500 hover:scale-105"
                         priority
                         sizes="(max-width: 768px) 100vw, 50vw"
                     />
 
-                    {images.length > 1 && (
+                    {imagesToDisplay.length > 1 && (
                         <>
                             <button
                                 onClick={handlePrev}
@@ -105,18 +95,18 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                     )}
                 </div>
 
-                {images.length > 1 && (
+                {imagesToDisplay.length > 1 && (
                     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                        {images.map((img, idx) => (
+                        {imagesToDisplay.map((img, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => handleImageClick(img)}
-                                className={`relative w-20 h-20 flex-shrink-0 rounded-md overflow-hidden border-2 transition-all ${activeImage === img ? 'border-primary-gold' : 'border-transparent hover:border-primary-lightGold'
+                                className={`relative w-20 h-20 flex-shrink-0 rounded-md overflow-hidden border-2 transition-all ${activeImage.url === img.url ? 'border-primary-gold' : 'border-transparent hover:border-primary-lightGold'
                                     }`}
                             >
                                 <Image
-                                    src={img}
-                                    alt={`${product.name} view ${idx + 1}`}
+                                    src={img.url}
+                                    alt={img.alt || `${currentName} view ${idx + 1}`}
                                     fill
                                     className="object-cover"
                                     sizes="80px"
@@ -138,29 +128,49 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                 <h1 className="text-3xl font-serif text-text-primary mb-2">{product.name}</h1>
 
                 <p className="text-2xl font-semibold text-text-primary mb-6 animate-fadeIn">
-                    ₹{product.price.toLocaleString('en-IN')}
+                    ₹{currentPrice.toLocaleString('en-IN')}
+                    {selectedVariant && selectedVariant.compareAtPrice && (
+                        <span className="text-lg text-text-muted line-through ml-3">
+                            ₹{selectedVariant.compareAtPrice.toLocaleString('en-IN')}
+                        </span>
+                    )}
+                    {!selectedVariant && product.compareAtPrice && (
+                        <span className="text-lg text-text-muted line-through ml-3">
+                            ₹{product.compareAtPrice.toLocaleString('en-IN')}
+                        </span>
+                    )}
                 </p>
 
                 {/* Variants Selector */}
-                {allVariants.length > 1 && (
+                {product.hasVariants && product.variants && (
                     <div className="mb-8">
-                        <h3 className="text-sm font-medium text-text-primary mb-3">Available Variants:</h3>
+                        <h3 className="text-sm font-medium text-text-primary mb-3">
+                            Select {product.variantType || 'Option'}: <span className="text-text-secondary font-normal">{currentVariantName}</span>
+                        </h3>
                         <div className="flex flex-wrap gap-2">
-                            {allVariants.map((p) => {
-                                const isSelected = product.id === p.id;
-                                // Use variantName if available, otherwise simplified name logic could be added
-                                const displayName = p.variantName || p.name;
+                            {product.variants.map((variant) => {
+                                const isSelected = selectedVariant?.id === variant.id;
+                                const isOutOfStock = !variant.inStock;
 
                                 return (
                                     <button
-                                        key={p.id}
-                                        onClick={() => handleVariantClick(p.slug)}
-                                        className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${isSelected
-                                                ? 'bg-primary-gold text-white border-primary-gold'
+                                        key={variant.id}
+                                        onClick={() => handleVariantClick(variant)}
+                                        disabled={isOutOfStock}
+                                        className={`px-4 py-2 rounded-full text-sm font-medium border transition-all relative ${isSelected
+                                            ? 'bg-primary-gold text-white border-primary-gold'
+                                            : isOutOfStock
+                                                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                                                 : 'bg-transparent text-text-secondary border-ui-border hover:border-primary-gold hover:text-primary-gold'
                                             }`}
                                     >
-                                        {displayName}
+                                        {variant.name}
+                                        {isOutOfStock && (
+                                            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                            </span>
+                                        )}
                                     </button>
                                 );
                             })}
@@ -173,18 +183,32 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                         {product.description}
                     </p>
                     <ul className="list-disc list-inside text-text-secondary space-y-1 text-sm">
-                        {/* We could add generic details if not in data, but user said 'assumed from data' */}
+                        {product.material && <li>Material: {product.material}</li>}
+                        {product.dimensions && (
+                            <li>
+                                Dimensions: {product.dimensions.length}x{product.dimensions.width} {product.dimensions.unit}
+                            </li>
+                        )}
                         <li>Handcrafted with care</li>
-                        <li>Premium finish</li>
                     </ul>
                 </div>
 
                 <div className="mt-auto">
-                    <InstagramButton
-                        variant="primary"
-                        className="w-full sm:w-auto text-lg py-4"
-                        message={`Message to Order: ${product.name} ${product.variantName ? `(${product.variantName})` : ''}`}
-                    />
+                    {currentStock ? (
+                        <InstagramButton
+                            variant="primary"
+                            className="w-full sm:w-auto text-lg py-4"
+                            message={`Message to Order: ${product.name} ${selectedVariant ? `(${selectedVariant.name})` : ''} - Price: ₹${currentPrice}`}
+                        />
+                    ) : (
+                        <button
+                            disabled
+                            className="w-full sm:w-auto text-lg py-4 px-8 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed font-medium"
+                        >
+                            Out of Stock
+                        </button>
+                    )}
+
                     <p className="mt-3 text-xs text-text-muted text-center sm:text-left">
                         Clicking will open Instagram chat with @isdhanistories
                     </p>

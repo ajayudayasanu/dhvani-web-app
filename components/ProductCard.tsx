@@ -7,15 +7,19 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-    // Use first image or a placeholder if empty (though our types say string[])
-    const imageSrc = product.images[0] || 'https://placehold.co/600x600/e2e8f0/475569?text=No+Image';
+    // Use first image or a placeholder
+    const imageSrc = product.images?.[0]?.url || 'https://placehold.co/600x600/e2e8f0/475569?text=No+Image';
+    const imageAlt = product.images?.[0]?.alt || product.name;
+
+    // Display price logic: Use min price if range exists, otherwise base price
+    const displayPrice = product.priceRange ? product.priceRange.min : product.price;
 
     return (
         <div className="group border border-ui-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-background-main">
             <Link href={`/products/${product.slug}`} className="block relative aspect-square">
                 <Image
                     src={imageSrc}
-                    alt={product.name}
+                    alt={imageAlt}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -34,7 +38,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                         {product.name}
                     </h3>
                 </Link>
-                <p className="text-text-primary font-semibold mb-3">₹{product.price.toLocaleString('en-IN')}</p>
+                <p className="text-text-primary font-semibold mb-3">
+                    ₹{displayPrice.toLocaleString('en-IN')}
+                    {product.priceRange && product.priceRange.min !== product.priceRange.max && (
+                        <span className="text-xs font-normal text-text-muted ml-1">+</span>
+                    )}
+                </p>
 
                 <Link
                     href={`/products/${product.slug}`}
