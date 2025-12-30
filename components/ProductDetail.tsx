@@ -198,7 +198,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                         <InstagramButton
                             variant="primary"
                             className="w-full sm:w-auto text-lg py-4"
-                            message={`Message to Order: ${product.name} ${selectedVariant ? `(${selectedVariant.name})` : ''} - Price: ₹${currentPrice}`}
+                            message={`Message to Order`}
                         />
                     ) : (
                         <button
