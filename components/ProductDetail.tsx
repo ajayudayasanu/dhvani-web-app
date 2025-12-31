@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { Menu, Heart } from 'lucide-react';
 import { Product, ProductVariant } from '../data/products';
 import InstagramButton from './InstagramButton';
+import { useWishlist } from '../context/WishlistContext';
 
 interface ProductDetailProps {
     product: Product;
@@ -12,6 +14,8 @@ interface ProductDetailProps {
 
 export default function ProductDetail({ product }: ProductDetailProps) {
     const router = useRouter();
+    const { isInWishlist, toggleWishlist } = useWishlist();
+    const isWishlisted = isInWishlist(product.id);
 
     // State for selected variant (if product has variants)
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
@@ -125,7 +129,18 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                     </span>
                 </div>
 
-                <h1 className="text-3xl font-serif text-text-primary mb-2">{product.name}</h1>
+                <div className="flex justify-between items-start gap-4">
+                    <h1 className="text-3xl font-serif text-text-primary mb-2">{product.name}</h1>
+                    <button
+                        onClick={() => toggleWishlist(product.id)}
+                        className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                        aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                    >
+                        <Heart
+                            className={`w-6 h-6 transition-colors ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-text-primary'}`}
+                        />
+                    </button>
+                </div>
 
                 <p className="text-2xl font-semibold text-text-primary mb-6 animate-fadeIn">
                     ₹{currentPrice.toLocaleString('en-IN')}

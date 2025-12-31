@@ -3,17 +3,27 @@ import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { Providers } from './providers';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
 
 export const metadata: Metadata = {
+  // metadataBase: new URL('https://dhvani-jewelry.com'), // Replace with your actual domain
   title: 'Dhvani – Jewellery & Ornaments',
   description: 'Handcrafted jewellery from Dhvani. View our collection and message us on Instagram to order.',
   openGraph: {
     title: 'Dhvani – Jewellery & Ornaments',
     description: 'Handcrafted jewellery from Dhvani.',
     type: 'website',
+    images: [
+      {
+        url: '/logo-transparent.png',
+        width: 800,
+        height: 600,
+        alt: 'Dhvani Logo',
+      },
+    ],
   },
 };
 
@@ -27,7 +37,9 @@ export default function RootLayout({
       <body className={`${inter.variable} ${playfair.variable} min-h-screen flex flex-col text-stone-900 bg-[#FAF7F2]`}>
         <Header />
         <main className="flex-grow w-full max-w-6xl mx-auto px-4 sm:px-6">
-          {children}
+          <Providers>
+            {children}
+          </Providers>
         </main>
         <Footer />
       </body>

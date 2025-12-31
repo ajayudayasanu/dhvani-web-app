@@ -15,7 +15,7 @@ export default function Header() {
                 {/* Center: Logo */}
                 <Link href="/" className="relative block h-10 w-28 md:w-32">
                     <Image
-                        src="/logo.jpg"
+                        src="/logo-transparent.png"
                         alt="Dhvani"
                         fill
                         className="object-contain" // ensure logo doesn't stretch
@@ -25,9 +25,9 @@ export default function Header() {
 
                 {/* Right: Wishlist & Profile */}
                 <div className="flex items-center gap-1 md:gap-2 -mr-2">
-                    <button className="p-2 text-text-primary hover:text-primary-gold focus:outline-none" aria-label="Wishlist">
+                    <Link href="/wishlist" className="p-2 text-text-primary hover:text-primary-gold focus:outline-none" aria-label="Wishlist">
                         <Heart className="w-5 h-5" />
-                    </button>
+                    </Link>
                     <button className="p-2 text-text-primary hover:text-primary-gold focus:outline-none" aria-label="Profile">
                         <User className="w-5 h-5" />
                     </button>
